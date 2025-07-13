@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bytox Key System</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .main-box {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 15px;
+      padding: 30px;
+      width: 400px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+      text-align: center;
+    }
+    h1 {
+      color: #ff3333;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+    p {
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+    .btn {
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      margin: 10px 0;
+      width: 100%;
+      transition: 0.2s;
+    }
+    .btn-red {
+      background-color: #ff3333;
+      color: white;
+    }
+    .btn-red:hover {
+      background-color: #e60000;
+    }
+    .btn-green {
+      background-color: #00cc66;
+      color: white;
+    }
+    .btn-green:hover {
+      background-color: #00994d;
+    }
+    #followStep {
+      display: none;
+      margin-top: 15px;
+    }
+    #confirmBtn {
+      display: none;
+    }
+    #keyBox {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #00ff99;
+      display: none;
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-box fade-in">
+    <h1>🎁 Bytox Key System</h1>
+    <p>للحصول على المفتاح، تابع حساب TikTok أولاً</p>
+    <button class="btn btn-red" onclick="startProcess()">الحصول على المفتاح</button>
+    <div id="followStep">
+      <p>📌 اضغط زر المتابعة، وبعدها ارجع للموقع ليظهر المفتاح</p>
+      <button class="btn btn-red" onclick="followTikTok()">تابعني على TikTok</button>
+      <button class="btn btn-green" id="confirmBtn" onclick="showKey()">حصول على  المفتاح ✅</button>
+    </div>
+    <div id="keyBox">
+      🔑 مفتاحك: <span id="key">جارٍ التحميل...</span>
+    </div>
+  </div>
+
+  <script>
+    function startProcess() {
+      document.getElementById("followStep").style.display = "block";
+    }
+
+    function followTikTok() {
+      window.open("https://www.tiktok.com/@metox.hub?_t=ZS-8xzwBnUIDiy&_r=1", "_blank");
+      setTimeout(() => {
+        document.getElementById("confirmBtn").style.display = "block";
+      }, 5000);
+    }
+
+    function generateKey() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let key = "BYTOX-";
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          key += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        if (i < 3) key += "-";
+      }
+      return key;
+    }
+
+    function getDailyKey() {
+      const today = new Date().toISOString().slice(0, 10);
+      const saved = JSON.parse(localStorage.getItem("dailyKeyData"));
+      if (saved && saved.date === today) {
+        return saved.key;
+      } else {
+        const newKey = generateKey();
+        localStorage.setItem("dailyKeyData", JSON.stringify({ date: today, key: newKey }));
+        return newKey;
+      }
+    }
+
+    function showKey() {
+      const key = getDailyKey();
+      document.getElementById("key").innerText = key;
+      document.getElementById("keyBox").style.display = "block";
+    }
+  </script>
+</body>
+</html>
